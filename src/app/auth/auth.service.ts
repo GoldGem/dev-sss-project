@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
+import * as config from '../../../auth_config.json';
 import { from, of, Observable, BehaviorSubject, combineLatest, throwError } from 'rxjs';
 import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -12,9 +13,10 @@ export class AuthService {
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
-      domain: "dev-sss-project.eu.auth0.com",
-      client_id: "goIGzUN2MxBWIW3COrJxe2ITQd9XJKQw",
-      redirect_uri: `${window.location.origin}`
+      domain: config.domain,
+      client_id: config.clientId,
+      redirect_uri: `${window.location.origin}`,
+      audience: config.audience
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -51,6 +53,14 @@ export class AuthService {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap(user => this.userProfileSubject$.next(user))
+    );
+  }
+
+  // When calling, options can be passed if desired
+  // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#gettokensilently
+  getTokenSilently$(options?): Observable<string> {
+    return this.auth0Client$.pipe(
+      concatMap((client: Auth0Client) => from(client.getTokenSilently(options)))
     );
   }
 
@@ -117,8 +127,8 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: "goIGzUN2MxBWIW3COrJxe2ITQd9XJKQw",
-        returnTo: `${window.location.origin}`
+        client_id: config.clientId,
+        returnTo: window.location.origin
       });
     });
   }

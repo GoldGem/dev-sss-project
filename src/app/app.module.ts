@@ -9,6 +9,9 @@ import { LandComponent } from './pages/land/land.component';
 import {RouterModule} from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {HttpClientModule} from '@angular/common/http';
+import { ExternalApiComponent } from './pages/external-api/external-api.component';
+import {HighlightModule} from 'ngx-highlightjs';
 
 
 
@@ -17,12 +20,14 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     AppComponent,
     NavBarComponent,
     LandComponent,
-    ProfileComponent
+    ProfileComponent,
+    ExternalApiComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     RouterModule,
+    HttpClientModule,
     NgbModule,
     FontAwesomeModule
   ],

@@ -26,6 +26,9 @@
           <li class="nav-item">
             <a class="nav-link my-2" routerLink="/">Home</a>
           </li>
+          <li class="nav-item" *ngIf="auth.loggedIn">
+            <a routerLink="external-api" class="nav-link my-2">External API</a>
+          </li>
         </ul>
 
 
